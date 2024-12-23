@@ -83,10 +83,10 @@ export default function PredictionForm({ setShowForm }: { setShowForm: (show: bo
             </Button>
             <div className="flex items-center space-x-2">
               <HeartIcon className="w-6 h-6 text-red-500" />
-              <CardTitle className="text-2xl font-bold">Heart Disease Risk Assessment</CardTitle>
+              <CardTitle className="text-md sm:text-2xl font-bold">Heart Disease Risk Assessment</CardTitle>
             </div>
           </div>
-          <CardDescription className='text-end'>
+          <CardDescription className='text-sm sm:text-lg text-end'>
             Enter your medical information below to assess your heart disease risk factors.
           </CardDescription>
         </CardHeader>
