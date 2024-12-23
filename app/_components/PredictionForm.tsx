@@ -73,7 +73,7 @@ export default function PredictionForm({ setShowForm }: { setShowForm: (show: bo
     <div className="py-12 container mx-auto">
       <Card className="w-full max-w-4xl mx-auto shadow-lg">
         <CardHeader className="space-y-2 py-10">
-          <div className='flex flex-row justify-between'>
+          <div className='flex flex-row justify-between space-x-7'>
             <Button
               onClick={() => setShowForm(false)}
               className="flex items-center space-x-2 rounded-full"
