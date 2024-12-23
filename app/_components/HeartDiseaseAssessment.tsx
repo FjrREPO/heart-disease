@@ -134,7 +134,7 @@ const HeartDiseaseAssessment = () => {
                     >
                       <h4 className="text-center font-medium mb-2 text-sm sm:text-base">Powered by AI</h4>
                       <p className="text-center text-xs sm:text-sm text-gray-600">
-                        Our assessment leverages multiple state-of-the-art machine learning models
+                        Our assessment leverages multiple state-of-the-art deep learning models
                         including K-Nearest Neighbors, Random Forest, XGBoost, and Gradient Boosting
                         for highly accurate risk prediction and analysis.
                       </p>
