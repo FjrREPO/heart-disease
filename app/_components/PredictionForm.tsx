@@ -10,10 +10,10 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { HeartIcon, ActivityIcon, AlertCircleIcon } from 'lucide-react';
+import { HeartIcon, ActivityIcon, AlertCircleIcon, ChevronLeft } from 'lucide-react';
 import { FORM_OPTIONS } from '@/constants/constants';
 
-export default function PredictionForm() {
+export default function PredictionForm({ setShowForm }: { setShowForm: (show: boolean) => void }) {
   const [formData, setFormData] = useState<HeartDiseaseFormData>({
     age: 0,
     sex: 0,
@@ -46,7 +46,11 @@ export default function PredictionForm() {
     setPrediction(null);
 
     try {
-      const response = await fetch('http://localhost:5000/api/predict', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      if (!apiUrl) {
+        throw new Error('API URL is not defined');
+      }
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -67,12 +71,21 @@ export default function PredictionForm() {
   return (
     <div className="py-12 container mx-auto">
       <Card className="w-full max-w-4xl mx-auto shadow-lg">
-        <CardHeader className="space-y-2">
-          <div className="flex items-center space-x-2">
-            <HeartIcon className="w-6 h-6 text-red-500" />
-            <CardTitle className="text-2xl font-bold">Heart Disease Risk Assessment</CardTitle>
+        <CardHeader className="space-y-2 py-10">
+          <div className='flex flex-row justify-between'>
+            <Button
+              onClick={() => setShowForm(false)}
+              className="flex items-center space-x-2 rounded-full"
+              variant={"outline"}
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </Button>
+            <div className="flex items-center space-x-2">
+              <HeartIcon className="w-6 h-6 text-red-500" />
+              <CardTitle className="text-2xl font-bold">Heart Disease Risk Assessment</CardTitle>
+            </div>
           </div>
-          <CardDescription>
+          <CardDescription className='text-end'>
             Enter your medical information below to assess your heart disease risk factors.
           </CardDescription>
         </CardHeader>
@@ -389,25 +402,25 @@ export default function PredictionForm() {
             </form>
           </ScrollArea>
 
-            {prediction && (
+          {prediction && (
             <div className="mt-6">
               {prediction.success ? (
-              <Alert className={`p-4 rounded-lg shadow-md ${prediction.prediction === 1 ? 'bg-red-100 border-l-4 border-red-500' : 'bg-green-100 border-l-4 border-green-500'}`}>
-                <AlertTitle className="text-lg font-semibold">
-                {prediction.prediction === 1 ? 'Heart Disease Risk Detected' : 'No Heart Disease Risk Detected'}
-                </AlertTitle>
-                <AlertDescription className="mt-2 text-sm">
-                Confidence: {prediction.probability ? (prediction.probability.positive * 100).toFixed(2) : 'N/A'}%
-                </AlertDescription>
-              </Alert>
+                <Alert className={`p-4 rounded-lg shadow-md ${prediction.prediction === 1 ? 'bg-red-100 border-l-4 border-red-500' : 'bg-green-100 border-l-4 border-green-500'}`}>
+                  <AlertTitle className="text-lg font-semibold">
+                    {prediction.prediction === 1 ? 'Heart Disease Risk Detected' : 'No Heart Disease Risk Detected'}
+                  </AlertTitle>
+                  <AlertDescription className="mt-2 text-sm">
+                    Confidence: {prediction.probability ? (prediction.probability.positive * 100).toFixed(2) : 'N/A'}%
+                  </AlertDescription>
+                </Alert>
               ) : (
-              <Alert className="p-4 bg-red-100 border-l-4 border-red-500 rounded-lg shadow-md">
-                <AlertTitle className="text-lg font-semibold">Error</AlertTitle>
-                <AlertDescription className="mt-2 text-sm">{prediction.error}</AlertDescription>
-              </Alert>
+                <Alert className="p-4 bg-red-100 border-l-4 border-red-500 rounded-lg shadow-md">
+                  <AlertTitle className="text-lg font-semibold">Error</AlertTitle>
+                  <AlertDescription className="mt-2 text-sm">{prediction.error}</AlertDescription>
+                </Alert>
               )}
             </div>
-            )}
+          )}
         </CardContent>
       </Card>
     </div>
