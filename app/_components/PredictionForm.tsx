@@ -12,10 +12,11 @@ import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { HeartIcon, ActivityIcon, AlertCircleIcon, ChevronLeft } from 'lucide-react';
 import { FORM_OPTIONS } from '@/constants/constants';
+import PredictionDialog from './PredictionDialog';
 
 export default function PredictionForm({ setShowForm }: { setShowForm: (show: boolean) => void }) {
   const [formData, setFormData] = useState<HeartDiseaseFormData>({
-    age: 0,
+    age: "",
     sex: 0,
     cp: 0,
     trestbps: 90,
@@ -108,7 +109,7 @@ export default function PredictionForm({ setShowForm }: { setShowForm: (show: bo
                     <Input
                       id="age"
                       type="number"
-                      min="18"
+                      min="10"
                       max="100"
                       value={formData.age}
                       onChange={(e) => handleInputChange('age', e.target.value)}
@@ -122,7 +123,7 @@ export default function PredictionForm({ setShowForm }: { setShowForm: (show: bo
                     <Label htmlFor="sex" className="text-sm font-medium">
                       Sex
                     </Label>
-                    <Select onValueChange={(value) => handleInputChange('sex', value)}>
+                    <Select onValueChange={(value) => handleInputChange('sex', value)} defaultValue='0'>
                       <SelectTrigger className="focus:ring-2 focus:ring-blue-500">
                         <SelectValue placeholder="Select sex" />
                       </SelectTrigger>
@@ -147,7 +148,7 @@ export default function PredictionForm({ setShowForm }: { setShowForm: (show: bo
                     <Label htmlFor="cp" className="text-sm font-medium">
                       Chest Pain Type
                     </Label>
-                    <Select onValueChange={(value) => handleInputChange('cp', value)}>
+                    <Select onValueChange={(value) => handleInputChange('cp', value)} defaultValue='0'>
                       <SelectTrigger className="focus:ring-2 focus:ring-blue-500">
                         <SelectValue placeholder="Select chest pain type" />
                       </SelectTrigger>
@@ -166,7 +167,7 @@ export default function PredictionForm({ setShowForm }: { setShowForm: (show: bo
                     <Label htmlFor="exang" className="text-sm font-medium">
                       Exercise Induced Angina
                     </Label>
-                    <Select onValueChange={(value) => handleInputChange('exang', value)}>
+                    <Select onValueChange={(value) => handleInputChange('exang', value)} defaultValue='0'>
                       <SelectTrigger className="focus:ring-2 focus:ring-blue-500">
                         <SelectValue placeholder="Select angina status" />
                       </SelectTrigger>
@@ -266,7 +267,7 @@ export default function PredictionForm({ setShowForm }: { setShowForm: (show: bo
                     <Label htmlFor="fbs" className="text-sm font-medium">
                       Fasting Blood Sugar {'>'} 120 mg/dl
                     </Label>
-                    <Select onValueChange={(value) => handleInputChange('fbs', value)}>
+                    <Select onValueChange={(value) => handleInputChange('fbs', value)} defaultValue='0'>
                       <SelectTrigger className="focus:ring-2 focus:ring-blue-500">
                         <SelectValue placeholder="Select fasting blood sugar" />
                       </SelectTrigger>
@@ -291,7 +292,7 @@ export default function PredictionForm({ setShowForm }: { setShowForm: (show: bo
                     <Label htmlFor="restecg" className="text-sm font-medium">
                       Resting ECG Results
                     </Label>
-                    <Select onValueChange={(value) => handleInputChange('restecg', value)}>
+                    <Select onValueChange={(value) => handleInputChange('restecg', value)} defaultValue='0'>
                       <SelectTrigger className="focus:ring-2 focus:ring-blue-500">
                         <SelectValue placeholder="Select ECG results" />
                       </SelectTrigger>
@@ -310,7 +311,7 @@ export default function PredictionForm({ setShowForm }: { setShowForm: (show: bo
                     <Label htmlFor="oldpeak" className="text-sm font-medium">
                       ST Depression
                     </Label>
-                    <Select onValueChange={(value) => handleInputChange('oldpeak', value)}>
+                    <Select onValueChange={(value) => handleInputChange('oldpeak', value)} defaultValue='0'>
                       <SelectTrigger className="focus:ring-2 focus:ring-blue-500">
                         <SelectValue placeholder="Select ST depression level" />
                       </SelectTrigger>
@@ -367,7 +368,7 @@ export default function PredictionForm({ setShowForm }: { setShowForm: (show: bo
                     <Label htmlFor="thal" className="text-sm font-medium">
                       Thalassemia
                     </Label>
-                    <Select onValueChange={(value) => handleInputChange('thal', value)}>
+                    <Select onValueChange={(value) => handleInputChange('thal', value)} defaultValue='0'>
                       <SelectTrigger className="focus:ring-2 focus:ring-blue-500">
                         <SelectValue placeholder="Select thalassemia type" />
                       </SelectTrigger>
@@ -387,7 +388,7 @@ export default function PredictionForm({ setShowForm }: { setShowForm: (show: bo
                 <Button
                   type="submit"
                   className="w-full bg-blue-600 hover:bg-blue-700"
-                  disabled={loading || formData.age < 18 || formData.age > 100 || formData.trestbps < 90 || formData.trestbps > 200 || formData.chol < 120 || formData.chol > 600 || formData.thalach < 60 || formData.thalach > 220}
+                  disabled={loading || Number(formData.age) < 10 || Number(formData.age) > 100 || formData.trestbps < 90 || formData.trestbps > 200 || formData.chol < 120 || formData.chol > 600 || formData.thalach < 60 || formData.thalach > 220}
                 >
                   {loading ? (
                     <div className="flex items-center space-x-2">
@@ -403,23 +404,10 @@ export default function PredictionForm({ setShowForm }: { setShowForm: (show: bo
           </ScrollArea>
 
           {prediction && (
-            <div className="mt-6">
-              {prediction.success ? (
-                <Alert className={`p-4 rounded-lg shadow-md ${prediction.prediction === 1 ? 'bg-red-100 border-l-4 border-red-500' : 'bg-green-100 border-l-4 border-green-500'}`}>
-                  <AlertTitle className="text-lg font-semibold">
-                    {prediction.prediction === 1 ? 'Heart Disease Risk Detected' : 'No Heart Disease Risk Detected'}
-                  </AlertTitle>
-                  <AlertDescription className="mt-2 text-sm">
-                    Confidence: {prediction.probability ? (prediction.probability.positive * 100).toFixed(2) : 'N/A'}%
-                  </AlertDescription>
-                </Alert>
-              ) : (
-                <Alert className="p-4 bg-red-100 border-l-4 border-red-500 rounded-lg shadow-md">
-                  <AlertTitle className="text-lg font-semibold">Error</AlertTitle>
-                  <AlertDescription className="mt-2 text-sm">{prediction.error}</AlertDescription>
-                </Alert>
-              )}
-            </div>
+            <PredictionDialog
+              prediction={prediction}
+              onClose={() => setPrediction(null)}
+            />
           )}
         </CardContent>
       </Card>

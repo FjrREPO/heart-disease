@@ -1,5 +1,5 @@
 interface HeartDiseaseFormData {
-  age: number;
+  age: string;
   sex: number;
   cp: number;
   trestbps: number;
