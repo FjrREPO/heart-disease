@@ -91,7 +91,7 @@ export default function PredictionForm({ setShowForm }: { setShowForm: (show: bo
         </CardHeader>
         <Separator />
         <CardContent className="pt-6">
-          <ScrollArea className="h-[600px] pr-4">
+          <ScrollArea className="h-[500px] sm:h-[600px] pr-4">
             <form onSubmit={handleSubmit} className="space-y-8 p-3">
               {/* Personal Information Section */}
               <div className="space-y-4">
